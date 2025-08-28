@@ -290,6 +290,27 @@ function App() {
     return () => clearInterval(interval);
   }, [isRunning, timeLeft]);
 
+  // Passer automatiquement au jour suivant après la complétion
+  useEffect(() => {
+    if (timerState === 'completed') {
+      const transitionTimeout = setTimeout(() => {
+        // Trouver le prochain jour non complété
+        const nextDay = challengeData.find(day => !completedDays.has(day.day));
+        
+        resetTimer();
+
+        if (nextDay) {
+          setSelectedDay(nextDay);
+        } else {
+          // Si tous les jours sont finis, désélectionner pour revenir à l'accueil
+          setSelectedDay(null);
+        }
+      }, 3000); // Délai de 3s pour afficher le message de réussite
+
+      return () => clearTimeout(transitionTimeout);
+    }
+  }, [timerState, completedDays, resetTimer]);
+
   const handleTimerComplete = () => {
     setIsRunning(false);
     playBeep();
@@ -324,13 +345,13 @@ function App() {
     }, 100);
   };
 
-  const resetTimer = () => {
+  const resetTimer = useCallback(() => {
     setIsRunning(false);
     setTimerState('idle');
     setCountdownState(null);
     setCountdownTime(0);
     setTimeLeft(0);
-  };
+  }, []);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
