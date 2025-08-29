@@ -1,54 +1,58 @@
+import React, { useCallback, useRef } from 'react';
 
-import { useCallback, useRef } from 'react';
-
-interface LongPressOptions {
-  shouldPreventDefault?: boolean;
-  delay?: number;
-}
-
+// Hook custom pour gérer le clic long (long press)
 export const useLongPress = (
   onLongPress: (event: React.MouseEvent | React.TouchEvent) => void,
   onClick: () => void,
-  { shouldPreventDefault = true, delay = 300 }: LongPressOptions = {}
+  { delay = 500 }: { delay?: number } = {}
 ) => {
   const timeout = useRef<NodeJS.Timeout>();
-  const target = useRef<EventTarget>();
+  const longPressTriggered = useRef(false);
 
   const start = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
-      if (shouldPreventDefault && event.target) {
-        event.target.addEventListener('touchend', preventDefault, { passive: false });
-        target.current = event.target;
+      // Empêcher le menu contextuel sur mobile qui peut apparaître au relâchement
+      if ('touches' in event) {
+        const preventContextMenu = (e: Event) => e.preventDefault();
+        event.currentTarget.addEventListener('contextmenu', preventContextMenu, { once: true });
       }
+      
+      longPressTriggered.current = false;
       timeout.current = setTimeout(() => {
         onLongPress(event);
+        longPressTriggered.current = true;
       }, delay);
     },
-    [onLongPress, delay, shouldPreventDefault]
+    [onLongPress, delay]
   );
 
   const clear = useCallback(
-    (event: React.MouseEvent | React.TouchEvent, shouldTriggerClick = true) => {
-      timeout.current && clearTimeout(timeout.current);
-      shouldTriggerClick && onClick();
-      if (shouldPreventDefault && target.current) {
-        target.current.removeEventListener('touchend', preventDefault);
+    (e: React.MouseEvent | React.TouchEvent) => {
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+      }
+      if (e.type === 'touchend' && longPressTriggered.current) {
+        e.preventDefault();
+      }
+      if (!longPressTriggered.current) {
+        onClick();
       }
     },
-    [onClick, shouldPreventDefault]
+    [onClick]
   );
+  
+  const cancel = useCallback(() => {
+    if (timeout.current) {
+        clearTimeout(timeout.current);
+    }
+  }, []);
 
-  const preventDefault = (event: Event) => {
-    if (!timeout.current) return;
-    event.preventDefault();
-    clear(event as any, false);
-  }
 
   return {
     onMouseDown: (e: React.MouseEvent) => start(e),
     onTouchStart: (e: React.TouchEvent) => start(e),
     onMouseUp: (e: React.MouseEvent) => clear(e),
-    onMouseLeave: (e: React.MouseEvent) => clear(e, false),
+    onMouseLeave: cancel,
     onTouchEnd: (e: React.TouchEvent) => clear(e),
   };
 };
