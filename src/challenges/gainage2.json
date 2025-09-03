@@ -1,0 +1,44 @@
+{
+  "name": "Défi 31 Jours (Image)",
+  "data": [
+        { 
+      "day": 1,
+      "series": [
+        { "isMax": true, "name": "Gainage Max" },
+        { "time": 5 },
+        { "time": 5 },
+        { "time": 5 }
+      ]
+    },
+    { "day": 2, "series": [{"reps": 3, "time": 5}] },
+    { "day": 3, "series": [{"reps": 2, "time": 30}] },
+    { "day": 4, "series": [{"reps": 3, "time": 25}] },
+    { "day": 5, "series": [{"reps": 2, "time": 35}] },
+    { "day": 6, "type": "repos" },
+    { "day": 7, "series": [{"reps": 3, "time": 30}] },
+    { "day": 8, "series": [{"reps": 2, "time": 40}] },
+    { "day": 9, "series": [{"reps": 3, "time": 35}] },
+    { "day": 10, "series": [{"reps": 4, "time": 25}] },
+    { "day": 11, "series": [{"reps": 2, "time": 30}, {"reps": 2, "time": 20}] },
+    { "day": 12, "type": "repos" },
+    { "day": 13, "series": [{"reps": 2, "time": 40}, {"reps": 2, "time": 25}] },
+    { "day": 14, "series": [{"reps": 2, "time": 30}, {"reps": 2, "time": 45}] },
+    { "day": 15, "type": "max", "series": [] },
+    { "day": 16, "series": [{"reps": 2, "time": 45}, {"reps": 2, "time": 35}] },
+    { "day": 17, "series": [{"reps": 2, "time": 30}, {"reps": 4, "time": 25}] },
+    { "day": 18, "type": "repos" },
+    { "day": 19, "series": [{"reps": 2, "time": 40}, {"reps": 4, "time": 25}] },
+    { "day": 20, "series": [{"reps": 3, "time": 35}, {"reps": 3, "time": 30}] },
+    { "day": 21, "series": [{"reps": 2, "time": 45}, {"reps": 3, "time": 30}] },
+    { "day": 22, "type": "max", "series": [] },
+    { "day": 23, "series": [{"reps": 2, "time": 50}, {"reps": 3, "time": 30}] },
+    { "day": 24, "type": "repos" },
+    { "day": 25, "series": [{"reps": 4, "time": 30}, {"reps": 2, "time": 45}] },
+    { "day": 26, "series": [{"reps": 3, "time": 40}, {"reps": 2, "time": 50}] },
+    { "day": 27, "series": [{"reps": 4, "time": 35}, {"reps": 2, "time": 45}] },
+    { "day": 28, "series": [{"reps": 4, "time": 30}, {"reps": 2, "time": 60}] },
+    { "day": 29, "series": [{"reps": 6, "time": 30}, {"reps": 2, "time": 45}] },
+	{ "day": 30, "type": "repos" },
+    { "day": 31, "type": "max", "series": [] }
+  ]
+}
