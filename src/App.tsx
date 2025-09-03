@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Play, Check, Clock, Award, Settings, ChevronDown } from 'lucide-react';
-import { DayData, SeriesEntry, Challenge } from './types';
+import { Check, Clock, Award, Settings, ChevronDown } from 'lucide-react';
+import { DayData, Challenge } from './types';
 import { TimerView, TimerViewHandles } from './TimerView'; // Import TimerViewHandles
 import { useLongPress } from './useLongPress';
 
@@ -12,7 +12,7 @@ async function getChallenges(): Promise<Challenge[]> {
   for (const path in challengeModules) {
     const id = path.split('/').pop()?.replace('.json', '');
     if (id) {
-      const module = await challengeModules[path]() as any;
+      const module = await challengeModules[path]() as { name: string; data: DayData[] };
       challenges.push({ id, name: module.name, data: module.data });
     }
   }
@@ -133,6 +133,7 @@ function App() {
       const newSeries = day.series.flatMap(entry => {
         if (entry.reps && entry.reps > 1) {
           return Array(entry.reps).fill(null).map(() => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { reps, ...rest } = entry;
             return rest;
           });
@@ -226,6 +227,7 @@ function App() {
   const initAudioContext = useCallback(() => {
     if (audioContext) return audioContext;
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
       setAudioContext(ctx);
       return ctx;
@@ -289,7 +291,7 @@ function App() {
   }, [challengeData, setSelectedDay]);
 
   const nextDayToDo = challengeData.find(day => !completedDays.has(day.day));
-  const isStartable = selectedDay && nextDayToDo ? selectedDay.day === nextDayToDo.day : false;
+  
   const currentChallengeName = challenges.find(c => c.id === selectedChallengeId)?.name || 'Chargement...';
 
   // --- Render ---

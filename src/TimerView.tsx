@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useImperativeHandle, forwardRef } from "react";
-import { DayData, SeriesEntry } from "./types";
+import { DayData } from "./types";
 import { Play, Pause, RotateCcw, Check, FastForward } from "lucide-react";
 
 export interface TimerViewHandles {
@@ -104,7 +104,7 @@ export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>((
             playBeep();
 
             const currentSeriesInfo = selectedDay.series?.[currentSeriesIndex];
-            const totalRepsForCurrentSeries = currentSeriesInfo?.reps || 1; // Default to 1 if reps not specified
+            
 
             if (phase === "work") {
               // Work phase is over. Check if it was the last one.
@@ -147,7 +147,7 @@ export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>((
         timerRef.current = null;
       }
     };
-  }, [isRunning, phase, currentSeriesIndex, currentRep, selectedDay, restTime, onWorkoutComplete, playBeep]);
+  }, [isRunning, phase, currentSeriesIndex, currentRep, selectedDay, restTime, onWorkoutComplete, playBeep, dayMaxRecord]);
 
   // Function to be called from App.tsx to start the workout
   const handleStartWorkout = useCallback(() => {
@@ -168,7 +168,7 @@ export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>((
       setCurrentRep(0);
       setIsRunning(true);
     }
-  }, [selectedDay, currentSeriesIndex]);
+  }, [selectedDay]);
 
   useImperativeHandle(ref, () => ({
     startWorkout: handleStartWorkout,
