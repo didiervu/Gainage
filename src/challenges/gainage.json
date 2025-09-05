@@ -1,15 +1,7 @@
 {
-  "name": "Défi 31 Jours (Image)",
+  "name": "Défi 31 Jours",
   "data": [
-        { 
-      "day": 1,
-      "series": [
-        { "isMax": true, "name": "Gainage Max" },
-        { "time": 5 },
-        { "time": 5 },
-        { "time": 5 }
-      ]
-    },
+    { "day": 1, "series": [{ "isMax": true, "name": "Gainage Max" },{ "reps": 3 ,"time": 5 }]},
     { "day": 2, "series": [{"reps": 3, "time": 5}] },
     { "day": 3, "series": [{"reps": 2, "time": 30}] },
     { "day": 4, "series": [{"reps": 3, "time": 25}] },

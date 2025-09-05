@@ -47,26 +47,51 @@ const DayButton: React.FC<DayButtonProps> = ({ day, isSelected, isCompleted, onS
         );
       }
 
-      if (day.type === 'max') {
-        return (
-          <div className={`${isSelected || isCompleted ? 'text-white' : 'text-gray-600'} text-xs`}>
-            MAX
-            {day.series && day.series.length > 0 && ` + ${day.series.length} SÉRIES`}
-          </div>
-        );
-      } else if (day.type === 'repos') {
+      if (day.type === 'repos') {
         return <div className={`${isSelected || isCompleted ? 'text-white' : 'text-gray-600'} text-xs`}>REPOS</div>;
-      } else if (day.series) {
-        const gmEntry = day.series.find(s => s.name === 'Gainage Main');
-        const gcEntry = day.series.find(s => s.name === 'Gainage Coude');
+      }
+
+      const hasMax = day.type === 'max' || day.series?.some(s => s.isMax);
+      const regularSeries = day.series?.filter(s => !s.isMax && s.time) || [];
+
+      const maxLabel = hasMax ? 'MAX' : '';
+      
+      const counts = regularSeries.reduce((acc, s) => {
+        const key = `${s.name || 'Exercice'}:${s.time}`;
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      const seriesLabels = Object.entries(counts).map(([key, count]) => {
+        const [name, time] = key.split(':');
+        const nameLabel = name === 'Exercice' ? '' : name.endsWith(' ') ? name : `${name} `;
+        const countLabel = count > 1 ? `${count} x ` : '';
+        return `${nameLabel}${countLabel}${time}s`;
+      });
+
+      const allLabels = [maxLabel, ...seriesLabels].filter(Boolean);
+
+      if (allLabels.length > 0) {
         return (
           <div className="text-xs space-y-0.5">
-            {gmEntry && <div className={`${isSelected || isCompleted ? 'text-white' : 'text-gray-600'}`}>{gmEntry.time}" GM</div>}
-            {gcEntry && <div className={`${isSelected || isCompleted ? 'text-white' : 'text-gray-600'}`}>{gcEntry.time}" GC</div>}
-            {!gmEntry && !gcEntry && <div className={`${isSelected || isCompleted ? 'text-white' : 'text-gray-600'}`}>{day.series.length} SÉRIES</div>}
+            {allLabels.map((label, i) => (
+              <div key={i} className={`${isSelected || isCompleted ? 'text-white' : 'text-gray-600'}`}>
+                {label}
+              </div>
+            ))}
           </div>
         );
       }
+
+      // Fallback
+      if (day.series && day.series.length > 0) {
+        return (
+          <div className={`${isSelected || isCompleted ? 'text-white' : 'text-gray-600'} text-xs`}>
+            {day.series.length} SÉRIES
+          </div>
+        );
+      }
+
       return null;
     };
 
@@ -304,12 +329,12 @@ function App() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-6xl font-black text-red-600 mb-2">GAINAGE</h1>
-          <p className="text-2xl font-bold text-gray-800">{currentChallengeName}</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-800">{currentChallengeName}</p>
           <p className="text-gray-600 mt-2">Sélectionnez un jour pour commencer ou appuyez longuement pour (dé)valider.</p>
         </div>
 
         <div className="flex justify-center mb-8">
-          <div className="bg-white rounded-xl shadow-lg p-6 flex items-center gap-4">
+          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 flex items-center gap-4">
             <Award className="text-yellow-500 w-8 h-8" />
             <div>
               <p className="text-2xl font-bold text-gray-800">{completedDays.size}/{challengeData.length}</p>
@@ -319,9 +344,9 @@ function App() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
             <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Calendrier du défi</h2>
-            <div className="grid grid-cols-5 gap-3">
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-2 sm:gap-3">
               {challengeData.map((day) => {
                 const isSelectable = isFreeMode || (nextDayToDo ? day.day === nextDayToDo.day : false) || completedDays.has(day.day);
                 const isDayDisabled = !isFreeMode && selectedDay && selectedDay.day !== day.day; // Disable other days when one is selected
@@ -392,7 +417,7 @@ function App() {
            </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6" ref={timerRef}>
+          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6" ref={timerRef}>
             {!selectedDay ? (
               <div className="flex flex-col items-center justify-center h-full text-center py-12">
                 <Clock className="w-16 h-16 text-gray-400 mb-4" />
