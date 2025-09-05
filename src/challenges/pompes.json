@@ -1,0 +1,36 @@
+
+{
+  "name": "Défi 30 Jours Pompes",
+  "data": [
+    { "day": 1, "series": [{ "name": "Pompes classiques", "reps": 5, "sets": 3 }] },
+    { "day": 2, "series": [{ "name": "Pompes classiques", "reps": 6, "sets": 3 }] },
+    { "day": 3, "series": [{ "name": "Pompes inclinées", "reps": 8, "sets": 3 }] },
+    { "day": 4, "type": "repos" },
+    { "day": 5, "series": [{ "name": "Pompes larges", "reps": 6, "sets": 4 }] },
+    { "day": 6, "series": [{ "name": "Pompes classiques", "reps": 8, "sets": 4 }] },
+    { "day": 7, "series": [{ "name": "Pompes inclinées", "reps": 10, "sets": 4 }] },
+    { "day": 8, "type": "repos" },
+    { "day": 9, "series": [{ "name": "Pompes diamant", "reps": 5, "sets": 3 }] },
+    { "day": 10, "series": [{ "name": "Pompes larges", "reps": 8, "sets": 4 }] },
+    { "day": 11, "series": [{ "name": "Pompes classiques", "reps": 12, "sets": 4 }] },
+    { "day": 12, "type": "repos" },
+    { "day": 13, "series": [{ "name": "Pompes diamant", "reps": 7, "sets": 4 }] },
+    { "day": 14, "series": [{ "name": "Pompes classiques", "reps": 15, "sets": 4 }] },
+    { "day": 15, "type": "max", "series": [{ "name": "Pompes Max", "isMax": true }] },
+    { "day": 16, "type": "repos" },
+    { "day": 17, "series": [{ "name": "Pompes larges", "reps": 12, "sets": 5 }] },
+    { "day": 18, "series": [{ "name": "Pompes déclinées", "reps": 8, "sets": 3 }] },
+    { "day": 19, "series": [{ "name": "Pompes diamant", "reps": 10, "sets": 4 }] },
+    { "day": 20, "type": "repos" },
+    { "day": 21, "series": [{ "name": "Pompes classiques", "reps": 18, "sets": 5 }] },
+    { "day": 22, "series": [{ "name": "Pompes larges", "reps": 15, "sets": 5 }] },
+    { "day": 23, "series": [{ "name": "Pompes déclinées", "reps": 12, "sets": 4 }] },
+    { "day": 24, "type": "repos" },
+    { "day": 25, "series": [{ "name": "Pompes diamant", "reps": 12, "sets": 5 }] },
+    { "day": 26, "series": [{ "name": "Pompes classiques", "reps": 20, "sets": 5 }] },
+    { "day": 27, "series": [{ "name": "Pompes larges", "reps": 18, "sets": 5 }] },
+    { "day": 28, "type": "repos" },
+    { "day": 29, "series": [{ "name": "Pompes déclinées", "reps": 15, "sets": 5 }, { "name": "Pompes diamant", "reps": 15, "sets": 3 }] },
+    { "day": 30, "type": "max", "series": [{ "name": "Pompes Max", "isMax": true }] }
+  ]
+}

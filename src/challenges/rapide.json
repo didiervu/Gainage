@@ -1,20 +1,20 @@
 {
   "name": "Défi Rapide 15 Jours",
   "data": [
-    { "day": 1, "gm": 10, "gc": 15 },
-    { "day": 2, "gm": 15, "gc": 15 },
-    { "day": 3, "gm": 15, "gc": 20 },
-    { "day": 4, "gm": 20, "gc": 20 },
-    { "day": 5, "gm": 20, "gc": 25 },
-    { "day": 6, "gm": 25, "gc": 25 },
-    { "day": 7, "gm": 25, "gc": 30 },
-    { "day": 8, "gm": 30, "gc": 30 },
-    { "day": 9, "gm": 30, "gc": 35 },
-    { "day": 10, "gm": 35, "gc": 40 },
-    { "day": 11, "gm": 40, "gc": 40 },
-    { "day": 12, "gm": 40, "gc": 45 },
-    { "day": 13, "gm": 45, "gc": 50 },
-    { "day": 14, "gm": 50, "gc": 50 },
-    { "day": 15, "gm": 60, "gc": 60 }
+    { "day": 1, "series": [{ "name": "Gainage Main", "time": 10 }, { "name": "Gainage Coude", "time": 15 }] },
+    { "day": 2, "series": [{ "name": "Gainage Main", "time": 15 }, { "name": "Gainage Coude", "time": 15 }] },
+    { "day": 3, "series": [{ "name": "Gainage Main", "time": 15 }, { "name": "Gainage Coude", "time": 20 }] },
+    { "day": 4, "series": [{ "name": "Gainage Main", "time": 20 }, { "name": "Gainage Coude", "time": 20 }] },
+    { "day": 5, "series": [{ "name": "Gainage Main", "time": 20 }, { "name": "Gainage Coude", "time": 25 }] },
+    { "day": 6, "series": [{ "name": "Gainage Main", "time": 25 }, { "name": "Gainage Coude", "time": 25 }] },
+    { "day": 7, "series": [{ "name": "Gainage Main", "time": 25 }, { "name": "Gainage Coude", "time": 30 }] },
+    { "day": 8, "series": [{ "name": "Gainage Main", "time": 30 }, { "name": "Gainage Coude", "time": 30 }] },
+    { "day": 9, "series": [{ "name": "Gainage Main", "time": 30 }, { "name": "Gainage Coude", "time": 35 }] },
+    { "day": 10, "series": [{ "name": "Gainage Main", "time": 35 }, { "name": "Gainage Coude", "time": 40 }] },
+    { "day": 11, "series": [{ "name": "Gainage Main", "time": 40 }, { "name": "Gainage Coude", "time": 40 }] },
+    { "day": 12, "series": [{ "name": "Gainage Main", "time": 40 }, { "name": "Gainage Coude", "time": 45 }] },
+    { "day": 13, "series": [{ "name": "Gainage Main", "time": 45 }, { "name": "Gainage Coude", "time": 50 }] },
+    { "day": 14, "series": [{ "name": "Gainage Main", "time": 50 }, { "name": "Gainage Coude", "time": 50 }] },
+    { "day": 15, "series": [{ "name": "Gainage Main", "time": 60 }, { "name": "Gainage Coude", "time": 60 }] }
   ]
 }

@@ -1,0 +1,36 @@
+
+{
+  "name": "Défi 30 Jours Abdos",
+  "data": [
+    { "day": 1, "series": [{ "name": "Crunchs", "reps": 20 }, { "name": "Gainage", "time": 30 }] },
+    { "day": 2, "series": [{ "name": "Relevés de jambes", "reps": 15 }, { "name": "Gainage", "time": 35 }] },
+    { "day": 3, "series": [{ "name": "Crunchs", "reps": 25 }, { "name": "Touche-chevilles", "reps": 20 }] },
+    { "day": 4, "type": "repos" },
+    { "day": 5, "series": [{ "name": "Gainage", "time": 45 }, { "name": "Relevés de jambes", "reps": 20 }] },
+    { "day": 6, "series": [{ "name": "Russian Twist", "reps": 20 }, { "name": "Crunchs", "reps": 30 }] },
+    { "day": 7, "series": [{ "name": "Gainage", "time": 50 }, { "name": "Touche-chevilles", "reps": 30 }] },
+    { "day": 8, "type": "repos" },
+    { "day": 9, "series": [{ "name": "Relevés de jambes", "reps": 25 }, { "name": "Russian Twist", "reps": 25 }] },
+    { "day": 10, "series": [{ "name": "Crunchs bicyclette", "reps": 20 }, { "name": "Gainage", "time": 60 }] },
+    { "day": 11, "series": [{ "name": "Crunchs", "reps": 40 }, { "name": "Relevés de jambes", "reps": 30 }] },
+    { "day": 12, "type": "repos" },
+    { "day": 13, "series": [{ "name": "Gainage", "time": 70 }, { "name": "Russian Twist", "reps": 30 }] },
+    { "day": 14, "series": [{ "name": "Crunchs bicyclette", "reps": 30 }, { "name": "Touche-chevilles", "reps": 40 }] },
+    { "day": 15, "type": "max", "series": [{ "name": "Gainage Max", "isMax": true }] },
+    { "day": 16, "type": "repos" },
+    { "day": 17, "series": [{ "name": "Relevés de jambes", "reps": 35 }, { "name": "Crunchs", "reps": 50 }] },
+    { "day": 18, "series": [{ "name": "Gainage", "time": 80 }, { "name": "Russian Twist", "reps": 35 }] },
+    { "day": 19, "series": [{ "name": "Crunchs bicyclette", "reps": 35 }, { "name": "Touche-chevilles", "reps": 50 }] },
+    { "day": 20, "type": "repos" },
+    { "day": 21, "series": [{ "name": "Gainage", "time": 90 }, { "name": "Relevés de jambes", "reps": 40 }] },
+    { "day": 22, "series": [{ "name": "Russian Twist", "reps": 40 }, { "name": "Crunchs", "reps": 60 }] },
+    { "day": 23, "series": [{ "name": "Crunchs bicyclette", "reps": 40 }, { "name": "Gainage", "time": 100 }] },
+    { "day": 24, "type": "repos" },
+    { "day": 25, "series": [{ "name": "Relevés de jambes", "reps": 50 }, { "name": "Touche-chevilles", "reps": 60 }] },
+    { "day": 26, "series": [{ "name": "Gainage", "time": 120 }, { "name": "Russian Twist", "reps": 50 }] },
+    { "day": 27, "series": [{ "name": "Crunchs bicyclette", "reps": 50 }, { "name": "Crunchs", "reps": 70 }] },
+    { "day": 28, "type": "repos" },
+    { "day": 29, "series": [{ "name": "Gainage", "time": 150 }, { "name": "Relevés de jambes", "reps": 60 }, { "name": "Russian Twist", "reps": 60 }] },
+    { "day": 30, "type": "max", "series": [{ "name": "Gainage Max", "isMax": true }, { "name": "Crunchs Max", "isMax": true }] }
+  ]
+}
