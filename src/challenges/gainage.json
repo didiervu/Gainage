@@ -31,6 +31,6 @@
     { "day": 28, "series": [{"reps": 4, "time": 30}, {"reps": 2, "time": 60}] },
     { "day": 29, "series": [{"reps": 6, "time": 30}, {"reps": 2, "time": 45}] },
 	{ "day": 30, "type": "repos" },
-    { "day": 31, "series": [{ "isMax": true, "name": "Gainage Max" },{ "reps": 3 ,"time": 60 }]},
+    { "day": 31, "series": [{ "isMax": true, "name": "Gainage Max" },{ "reps": 3 ,"time": 60 }]}
   ]
 }
