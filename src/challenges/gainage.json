@@ -22,7 +22,7 @@
     { "day": 19, "series": [{"reps": 2, "time": 40}, {"reps": 4, "time": 25}] },
     { "day": 20, "series": [{"reps": 3, "time": 35}, {"reps": 3, "time": 30}] },
     { "day": 21, "series": [{"reps": 2, "time": 45}, {"reps": 3, "time": 30}] },
-    { "day": 22, "type": "max", "series": [{ "name": "Gainage Max", "isMax": true }] },
+    { "day": 22, "series": [{ "isMax": true, "name": "Gainage Max" },{ "reps": 2 ,"time": 45 }]},
     { "day": 23, "series": [{"reps": 2, "time": 50}, {"reps": 3, "time": 30}] },
     { "day": 24, "type": "repos" },
     { "day": 25, "series": [{"reps": 4, "time": 30}, {"reps": 2, "time": 45}] },
@@ -31,6 +31,6 @@
     { "day": 28, "series": [{"reps": 4, "time": 30}, {"reps": 2, "time": 60}] },
     { "day": 29, "series": [{"reps": 6, "time": 30}, {"reps": 2, "time": 45}] },
 	{ "day": 30, "type": "repos" },
-    { "day": 31, "type": "max", "series": [{ "name": "Gainage Max", "isMax": true }] }
+    { "day": 31, "series": [{ "isMax": true, "name": "Gainage Max" },{ "reps": 3 ,"time": 60 }]},
   ]
 }
