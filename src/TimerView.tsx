@@ -41,6 +41,19 @@ export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>(
       setDayMaxRecord(undefined);
     }, []);
 
+    const moveToNextRep = useCallback(() => {
+        if (!selectedDay || !selectedDay.series) return;
+        const currentSeries = selectedDay.series[currentSeriesIndex];
+        if (currentSeries.reps && currentRep < currentSeries.reps - 1) {
+            setCurrentRep(currentRep + 1);
+            setPhase("rest");
+            setTimeLeft(restTime);
+            setIsRunning(true);
+        } else {
+            moveToNextSeries();
+        }
+    }, [selectedDay, currentSeriesIndex, currentRep, restTime]);
+
     const moveToNextSeries = useCallback(() => {
         if (!selectedDay) return;
         setCurrentRep(0);
@@ -91,14 +104,7 @@ export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>(
                     setIsRunning(false);
                 }
             } else if (phase === 'work') {
-                const currentSeries = selectedDay.series![currentSeriesIndex];
-                if (currentSeries.reps && currentRep < currentSeries.reps - 1) {
-                    setCurrentRep(r => r + 1);
-                    setPhase('rest');
-                    setTimeLeft(restTime);
-                } else {
-                    moveToNextSeries();
-                }
+                moveToNextRep();
             } else if (phase === 'rest') {
                 setPhase('prep');
                 setTimeLeft(PREP_TIME);
@@ -161,7 +167,10 @@ export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>(
     
     const getSubtitle = () => {
         if (phase === 'idle' || phase === 'done' || phase === 'prep' || phase === 'max') return '';
-        if (currentSeriesInfo?.reps && currentSeriesInfo.reps > 1 && currentSeriesInfo.time) {
+        if (currentSeriesInfo?.reps && currentSeriesInfo.time) {
+            return `Répétition ${currentRep + 1} / ${currentSeriesInfo.reps}`;
+        }
+        if (currentSeriesInfo?.reps && currentSeriesInfo.reps > 1) {
             return `Série ${currentRep + 1} / ${currentSeriesInfo.reps}`;
         }
         return `Série ${currentSeriesIndex + 1} / ${selectedDay?.series?.length || 1}`;
@@ -173,10 +182,10 @@ export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>(
         if (phase === "done") {
             return (
                 <div className="mt-4 p-4">
-                    <Check className="w-16 h-16 text-[#06D6A0] mx-auto mb-4" />
-                    <p className="text-2xl text-[#06D6A0] font-semibold">Jour {selectedDay.day} terminé !</p>
-                    <p className="text-[#EAEAEA] mt-4">Félicitations !</p>
-                    <button onClick={onClose} className="mt-6 bg-red-600 text-white font-bold py-2 px-4 rounded-lg">Fermer</button>
+                    <Check className="w-16 h-16 text-[#10B981] mx-auto mb-4" />
+                    <p className="text-2xl text-[#10B981] font-semibold">Jour {selectedDay.day} terminé !</p>
+                    <p className="text-[#1F2937] mt-4">Félicitations !</p>
+                    <button onClick={onClose} className="mt-6 bg-[#10B981] text-white font-bold py-2 px-4 rounded-lg">Fermer</button>
                 </div>
             );
         }
@@ -184,13 +193,13 @@ export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>(
         if (phase === "reps_manual" && currentSeriesInfo) {
             return (
                 <>
-                    <p className="text-xl text-[#EAEAEA] mb-2 h-7">{getSubtitle()}</p>
-                    <p className="text-2xl font-bold text-[#FF6B35] mb-4 h-8">{getTitle()}</p>
-                    <p className="font-mono my-4 text-[#EAEAEA] text-7xl md:text-8xl">{currentSeriesInfo.reps}x</p>
+                    <p className="text-xl text-[#6B7280] mb-2 h-7">{getSubtitle()}</p>
+                    <p className="text-2xl font-bold text-[#10B981] mb-4 h-8">{getTitle()}</p>
+                    <p className="font-mono my-4 text-[#1F2937] text-7xl md:text-8xl">{currentSeriesInfo.reps}x</p>
                     <div className="h-8 mb-4"></div>
                     <div className="flex justify-center items-center gap-4">
-                        <button onClick={handleManualRepComplete} className="w-32 h-16 bg-green-500 text-white rounded-lg flex items-center justify-center shadow-lg text-xl font-bold">Terminé</button>
-                        <button onClick={handleReset} className="w-16 h-16 bg-[#243447] text-white rounded-full flex items-center justify-center shadow-md"><RotateCcw size={32}/></button>
+                        <button onClick={handleManualRepComplete} className="w-32 h-16 bg-[#10B981] text-white rounded-lg flex items-center justify-center shadow-lg text-xl font-bold">Terminé</button>
+                        <button onClick={handleReset} className="w-16 h-16 bg-gray-200 text-[#1F2937] rounded-full flex items-center justify-center shadow-md"><RotateCcw size={32}/></button>
                     </div>
                 </>
             );
@@ -198,36 +207,36 @@ export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>(
 
         return (
             <>
-                <p className="text-xl text-[#EAEAEA] mb-2 h-7">{getSubtitle()}</p>
-                <p className="text-2xl font-bold text-[#FF6B35] mb-4 h-8">{getTitle()}</p>
-                <p className={`font-mono my-4 transition-all duration-300 ${phase === 'prep' ? 'text-[#FF6B35] text-8xl md:text-9xl' : 'text-[#EAEAEA] text-7xl md:text-8xl'}`}>
+                <p className="text-xl text-[#6B7280] mb-2 h-7">{getSubtitle()}</p>
+                <p className="text-2xl font-bold text-[#10B981] mb-4 h-8">{getTitle()}</p>
+                <p className={`font-mono my-4 transition-all duration-300 ${phase === 'prep' ? 'text-[#10B981] text-8xl md:text-9xl' : 'text-[#1F2937] text-7xl md:text-8xl'}`}>
                     {phase === "max" ? formatTime(maxTime) : formatTime(timeLeft)}
                 </p>
                 <div className="h-8 mb-4">
                   {phase === 'prep' && currentSeriesInfo && (
-                    <p className="text-xl text-[#EAEAEA]">
-                        À suivre: {currentSeriesInfo.time ? `${currentSeriesInfo.time}s` : ''} {currentSeriesInfo.name || ''}
+                    <p className="text-xl text-[#1F2937]">
+                        À suivre: {currentSeriesInfo.reps ? `${currentSeriesInfo.reps}x` : ''} {currentSeriesInfo.time ? `${currentSeriesInfo.time}s` : ''} {currentSeriesInfo.name || ''}
                     </p>
                   )}
                 </div>
                 <div className="flex justify-center items-center gap-4">
                   {!isRunning && phase !== "done" && phase === 'idle' && (
-                    <button onClick={handleStartWorkout} className="w-20 h-20 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg"><Play size={40} className="ml-1"/></button>
+                    <button onClick={handleStartWorkout} className="w-20 h-20 bg-[#10B981] text-white rounded-full flex items-center justify-center shadow-lg"><Play size={40} className="ml-1"/></button>
                   )}
                   {!isRunning && phase !== "done" && phase !== 'idle' && (
-                     <button onClick={handleResume} className="w-20 h-20 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg"><Play size={40} className="ml-1"/></button>
+                     <button onClick={handleResume} className="w-20 h-20 bg-[#10B981] text-white rounded-full flex items-center justify-center shadow-lg"><Play size={40} className="ml-1"/></button>
                   )}
                   {isRunning && phase !== "max" && (
-                    <button onClick={handlePause} className="w-20 h-20 bg-yellow-500 text-white rounded-full flex items-center justify-center shadow-lg"><Pause size={40} /></button>
+                    <button onClick={handlePause} className="w-20 h-20 bg-gray-400 text-white rounded-full flex items-center justify-center shadow-lg"><Pause size={40} /></button>
                   )}
                   {phase !== "done" && phase !== 'idle' && (
-                    <button onClick={handleReset} className="w-16 h-16 bg-[#243447] text-white rounded-full flex items-center justify-center shadow-md"><RotateCcw size={32}/></button>
+                    <button onClick={handleReset} className="w-16 h-16 bg-gray-200 text-[#1F2937] rounded-full flex items-center justify-center shadow-md"><RotateCcw size={32}/></button>
                   )}
                   {phase === "max" && (
-                    <button onClick={handleCompleteMax} className="w-20 h-20 bg-blue-500 text-white rounded-full flex items-center justify-center shadow-lg"><Check size={40}/></button>
+                    <button onClick={handleCompleteMax} className="w-20 h-20 bg-[#3B82F6] text-white rounded-full flex items-center justify-center shadow-lg"><Check size={40}/></button>
                   )}
                   {phase === "rest" && (
-                    <button onClick={handleSkipRest} className="w-16 h-16 bg-purple-500 text-white rounded-full flex items-center justify-center shadow-md" title="Passer la récupération"><FastForward size={32}/></button>
+                    <button onClick={handleSkipRest} className="w-16 h-16 bg-[#8B5CF6] text-white rounded-full flex items-center justify-center shadow-md" title="Passer la récupération"><FastForward size={32}/></button>
                   )}
                 </div>
             </>
@@ -235,10 +244,10 @@ export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>(
     }
 
     return (
-      <div className="relative text-center p-4 h-full flex flex-col justify-center bg-[#243447]">
-        <button onClick={onClose} className="absolute top-4 right-4 text-[#EAEAEA] hover:text-[#FF6B35] transition-colors"><X size={28} /></button>
-        <h2 className="text-2xl font-bold text-[#FF6B35] mb-4">JOUR {selectedDay.day}</h2>
-        {selectedDay.type === "repos" ? <p className="text-[#EAEAEA]">Repos aujourd'hui !</p> : <div className="flex-grow flex flex-col justify-center">{renderContent()}</div>}
+      <div className="relative text-center p-4 h-full flex flex-col justify-center bg-white">
+        <button onClick={onClose} className="absolute top-4 right-4 text-[#6B7280] hover:text-[#10B981] transition-colors"><X size={28} /></button>
+        <h2 className="text-2xl font-bold text-[#10B981] mb-4">JOUR {selectedDay.day}</h2>
+        {selectedDay.type === "repos" ? <p className="text-[#1F2937]">Repos aujourd'hui !</p> : <div className="flex-grow flex flex-col justify-center">{renderContent()}</div>}
       </div>
     );
   }
