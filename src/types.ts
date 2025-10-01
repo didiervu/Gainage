@@ -1,9 +1,8 @@
 export interface SeriesEntry {
-  time?: number; // Duration in seconds
-  reps?: number; // Number of repetitions
-  sets?: number; // Number of sets
-  name?: string; // Optional name for the exercise (e.g., "Gainage Main", "Gainage Coude")
-  isMax?: boolean; // Indicates if this specific series entry is a 'max' type
+  name: string;
+  type: 'exercise' | 'rest' | 'max'; // Nouveau champ
+  time?: number; // Durée en secondes
+  repetitions?: number; // Nombre de répétitions
 }
 
 export interface DayData {
