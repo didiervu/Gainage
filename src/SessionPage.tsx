@@ -5,7 +5,7 @@ import { getChallenges } from './challengeLoader';
 import { Challenge } from './types';
 import { SynchronizedTimer } from './SynchronizedTimer';
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
+const SERVER_URL = 'https://e9ec1668-85f8-4ae4-aa83-ffe230b00364-00-27qjdix7hb0eu.kirk.replit.dev/';
 const USERNAME_KEY = 'gainage-userName';
 
 // --- Types ---
