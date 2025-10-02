@@ -37,6 +37,7 @@ export const SessionPage: React.FC = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
   const navigate = useNavigate();
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [serverStatus, setServerStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
   const [isHost, setIsHost] = useState(false);
   const [sessionState, setSessionState] = useState<SessionState | null>(null);
   const [allChallenges, setAllChallenges] = useState<Challenge[]>([]);
@@ -50,10 +51,25 @@ export const SessionPage: React.FC = () => {
   useEffect(() => {
     if (!isNameSet || !sessionId) return;
 
-    console.log('SessionPage: useEffect socket connection');
-    const newSocket = io(SERVER_URL);
+    console.log('SessionPage: Tentative de connexion socket');
+    const newSocket = io(SERVER_URL, {
+      timeout: 60000, // 60 secondes de délai
+      reconnection: false, // On gère l'erreur nous-mêmes
+    });
     setSocket(newSocket);
-    newSocket.emit('join-session', { sessionId, name: userName });
+
+    newSocket.on('connect', () => {
+      console.log('Socket connecté !');
+      setServerStatus('connected');
+      newSocket.emit('join-session', { sessionId, name: userName });
+    });
+
+    newSocket.on('connect_error', (err) => {
+      console.error('Erreur de connexion socket:', err.message);
+      setServerStatus('error');
+      newSocket.disconnect();
+    });
+
     newSocket.on('session-joined', ({ isHost }) => setIsHost(isHost));
     newSocket.on('session-update', (state: SessionState) => {
       console.log('SessionPage: session-update reçu', state);
@@ -162,11 +178,30 @@ export const SessionPage: React.FC = () => {
     );
   }
 
+  if (serverStatus === 'connecting') {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4 text-center">
+        <h1 className="text-2xl font-bold mb-4 text-gray-800">Connexion au serveur...</h1>
+        <p className="text-lg text-gray-600">Le démarrage du serveur peut prendre jusqu'à une minute.</p>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mt-8"></div>
+      </div>
+    );
+  }
+
+  if (serverStatus === 'error') {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4 text-center">
+        <h1 className="text-2xl font-bold mb-4 text-red-600">Erreur de connexion</h1>
+        <p className="text-lg text-gray-600">Impossible de se connecter au serveur.<br/>Veuillez réessayer en rafraîchissant la page.</p>
+      </div>
+    );
+  }
+
   // Logique de rendu principale
   let mainContent = null;
 
   if (!sessionState) {
-    mainContent = <p>Connexion à la session...</p>;
+    mainContent = <p>En attente des informations de la session...</p>;
   } else if (!sessionState.challenge) {
     if (isHost) {
       mainContent = (
