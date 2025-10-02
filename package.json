@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "start": "npm-run-all -r --parallel dev server:start",
+    "server:start": "cd server && npm start"
   },
   "dependencies": {
     "lucide-react": "^0.344.0",
@@ -33,6 +35,7 @@
     "eslint-plugin-react-refresh": "^0.4.11",
     "globals": "^15.9.0",
     "jsdom": "^26.1.0",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.5.3",
