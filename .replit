@@ -1,0 +1,11 @@
+# Fichier de configuration pour Replit
+
+# La commande à exécuter lorsque vous appuyez sur "Run" ou que le serveur se réveille.
+# "npm start" à la racine lancera le client et le serveur en parallèle.
+run = "npm start"
+
+# La section [deployment] définit les commandes à exécuter lors de chaque déploiement.
+[deployment]
+# Cette commande s'assure que toutes les dépendances (racine et serveur) sont installées,
+# et que le code du serveur est compilé avant tout.
+build_command = "npm install && cd server && npm install && npm run build"
