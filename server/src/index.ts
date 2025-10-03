@@ -297,6 +297,11 @@ function advanceWorkoutState(sessionId: string) {
   }
 }
 
+// Route pour les vérifications de santé (health checks) comme le cron job
+app.get('/', (req, res) => {
+  res.status(200).send('Server is up and running!');
+});
+
 // --- Démarrage du serveur ---
 server.listen(PORT, async () => {
   await loadChallenges();
