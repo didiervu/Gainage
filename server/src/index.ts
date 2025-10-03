@@ -299,7 +299,8 @@ function advanceWorkoutState(sessionId: string) {
 
 // Route pour les vérifications de santé (health checks) comme le cron job
 app.get('/', (req, res) => {
-  res.status(200).send('Server is up and running!');
+  const now = new Date().toISOString();
+  res.status(200).send(`Server is up and running! Current time: ${now}`);
 });
 
 // --- Démarrage du serveur ---
