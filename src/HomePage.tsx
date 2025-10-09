@@ -457,6 +457,9 @@ export function HomePage() {
       case 'home':
         return (
           <div className="p-4">
+            <p style={{ backgroundColor: 'red', color: 'white', padding: '10px', textAlign: 'center', fontSize: '12px', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999 }}>
+              DEBUG: API URL is {import.meta.env.VITE_API_URL || 'NOT SET'}
+            </p>
             <h1 className="text-3xl font-bold text-center text-[#10B981] mb-2">{selectedDay ? `Jour ${selectedDay.day}` : (nextDayToDo ? `Jour ${nextDayToDo.day}`: 'Défi Terminé')}</h1>
             <p className="text-center text-[#1F2937] mb-6">{currentChallengeName}</p>
             {selectedDay ? (

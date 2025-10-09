@@ -5,7 +5,7 @@ import { getChallenges } from './challengeLoader';
 import { Challenge } from './types';
 import { SynchronizedTimer } from './SynchronizedTimer';
 
-const SERVER_URL = 'https://e9ec1668-85f8-4ae4-aa83-ffe230b00364-00-27qjdix7hb0eu.kirk.replit.dev/';
+const SERVER_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 const USERNAME_KEY = 'gainage-userName';
 
 // --- Types ---
@@ -52,6 +52,7 @@ export const SessionPage: React.FC = () => {
     if (!isNameSet || !sessionId) return;
 
     console.log('SessionPage: Tentative de connexion socket');
+    console.log('Connexion au serveur à l\'adresse :', SERVER_URL);
     const newSocket = io(SERVER_URL, {
       timeout: 60000, // 60 secondes de délai
       reconnection: false, // On gère l'erreur nous-mêmes
