@@ -145,7 +145,9 @@ export function HomePage() {
   };
   // --- State ---
   const [challenges, setChallenges] = useState<Challenge[]>([]);
-  const [selectedChallengeId, setSelectedChallengeId] = useState<string>('default');
+    const [selectedChallengeId, setSelectedChallengeId] = useState<string>(() => {
+    return localStorage.getItem('gainage-last-challenge') || 'default';
+  });
   const [challengeData, setChallengeData] = useState<DayData[]>([]);
   const [selectedDay, setSelectedDay] = useState<DayData | null>(null);
   const [completedDays, setCompletedDays] = useState<Set<number>>(new Set());
@@ -544,7 +546,7 @@ export function HomePage() {
               <div>
                 <label htmlFor="challenge-select" className="block text-sm font-medium text-[#1F2937] mb-2">Défi actuel</label>
                 <div className="relative">
-                  <select id="challenge-select" value={selectedChallengeId} onChange={e => setSelectedChallengeId(e.target.value)} className="w-full appearance-none bg-white border border-[#10B981] text-[#1F2937] py-2 pl-3 pr-8 rounded-lg focus:outline-none focus:bg-white focus:border-[#10B981]">
+                  <select id="challenge-select" value={selectedChallengeId} onChange={e => { setSelectedChallengeId(e.target.value); setActiveTab('home'); }} className="w-full appearance-none bg-white border border-[#10B981] text-[#1F2937] py-2 pl-3 pr-8 rounded-lg focus:outline-none focus:bg-white focus:border-[#10B981]">
                     {allChallenges.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#1F2937]"><ChevronDown className="w-4 h-4"/></div>
