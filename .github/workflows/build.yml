@@ -24,8 +24,8 @@ jobs:
     - name: Lint project
       run: npm run lint
 
-      #- name: Run tests
-      #run: npm run test
+    - name: Run tests (skipped)
+      run: echo "Tests are skipped for now"
 
     - name: Build project
       run: npm run build
