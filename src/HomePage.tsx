@@ -5,6 +5,7 @@ import { Check, Clock, ChevronDown, Home, CalendarDays, SlidersHorizontal, Play,
 import { DayData, Challenge, SeriesEntry } from './types';
 import { TimerView, TimerViewHandles } from './TimerView';
 import { ChallengeEditor } from './ChallengeEditor';
+import { ChallengeWizard } from './ChallengeWizard';
 
 const USER_CHALLENGES_STORAGE_KEY = 'gainage-user-challenges';
 
@@ -98,7 +99,8 @@ interface DayDetailsProps {
 }
 
 const DayDetails: React.FC<DayDetailsProps> = ({ day }) => {
-  const series = day.originalSeries || day.series || [];
+  const series = day.series || [];
+  const originalSeries = day.originalSeries || series;
 
   if (day.type === 'max') {
     return <p className="text-[#1F2937] text-center">Tenir le plus longtemps possible.</p>;
@@ -115,9 +117,16 @@ const DayDetails: React.FC<DayDetailsProps> = ({ day }) => {
   return (
     <ul className="space-y-2 mt-2">
       {series.map((s, i) => {
+        const originalExercise = originalSeries[i] || s;
         let label = s.name || 'Exercice';
         const details = [];
-        if (s.reps) details.push(`${s.reps} reps`);
+        
+        if (originalExercise.repsPercentage) {
+          details.push(`${s.reps} reps (${Math.round(originalExercise.repsPercentage * 100)}% max)`);
+        } else if (s.reps) {
+          details.push(`${s.reps} reps`);
+        }
+
         if (s.time) details.push(`${s.time}s`);
         if (details.length > 0) label = `${label} : ${details.join(', ')}`;
         return <li key={i} className="text-[#1F2937] bg-white shadow-sm p-2 rounded-md text-sm">{label.trim()}</li>;
@@ -152,6 +161,7 @@ export function HomePage() {
   const [selectedDay, setSelectedDay] = useState<DayData | null>(null);
   const [completedDays, setCompletedDays] = useState<Set<number>>(new Set());
   const [restTime, setRestTime] = useState<number>(30);
+  const [maxReps, setMaxReps] = useState<number>(() => parseInt(localStorage.getItem('gainage-max-reps') || '20', 10));
   const [maxTimes, setMaxTimes] = useState<{ [day: number]: number }>({});
   const [isFreeMode, setIsFreeMode] = useState<boolean>(false);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
@@ -161,6 +171,7 @@ export function HomePage() {
 
   const [activeTab, setActiveTab] = useState('home');
   const [isWorkoutActive, setIsWorkoutActive] = useState(false);
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
 
   const [newChallengeName, setNewChallengeName] = useState<string>('');
   const [repsMultiplier, setRepsMultiplier] = useState<number>(1);
@@ -198,7 +209,18 @@ export function HomePage() {
 
     const processedData = challenge.data.map(day => {
       if (!day.series) return day;
-      return { ...day, series: day.series, originalSeries: day.series };
+
+      const newSeries = day.series.map(exercise => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((exercise as any).repsPercentage) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const calculatedReps = Math.max(1, Math.round(maxReps * (exercise as any).repsPercentage));
+          return { ...exercise, reps: calculatedReps };
+        }
+        return exercise;
+      });
+
+      return { ...day, series: newSeries, originalSeries: day.series };
     });
 
     setChallengeData(processedData);
@@ -214,12 +236,13 @@ export function HomePage() {
     const nextDay = processedData.find(day => !savedCompleted.includes(day.day));
     setSelectedDay(nextDay ? { ...nextDay } : (processedData[0] ? { ...processedData[0] } : null));
 
-  }, [selectedChallengeId, allChallenges]);
+  }, [selectedChallengeId, allChallenges, maxReps]);
 
   useEffect(() => { if (challengeData.length > 0) localStorage.setItem(`gainage-completed-${selectedChallengeId}`, JSON.stringify([...completedDays])); }, [completedDays, selectedChallengeId, challengeData]);
   useEffect(() => { if (challengeData.length > 0) localStorage.setItem(`gainage-max-times-${selectedChallengeId}`, JSON.stringify(maxTimes)); }, [maxTimes, selectedChallengeId, challengeData]);
   useEffect(() => { if (challengeData.length > 0) localStorage.setItem(`gainage-rest-time-${selectedChallengeId}`, String(restTime)); }, [restTime, selectedChallengeId, challengeData]);
   useEffect(() => { if (challengeData.length > 0) localStorage.setItem(`gainage-free-mode-${selectedChallengeId}`, JSON.stringify(isFreeMode)); }, [isFreeMode, selectedChallengeId, challengeData]);
+  useEffect(() => { localStorage.setItem('gainage-max-reps', String(maxReps)); }, [maxReps]);
 
   // Scroll to the selected day when the calendar tab is active
   useEffect(() => {
@@ -418,6 +441,13 @@ export function HomePage() {
     }
   }, [selectedImportFile, challenges]);
 
+  const handleChallengeCreated = useCallback((newChallenge: Challenge) => {
+    setCustomChallenges(prev => [...prev, newChallenge]);
+    setSelectedChallengeId(newChallenge.id);
+    setIsWizardOpen(false);
+    setActiveTab('home');
+  }, [setCustomChallenges, setSelectedChallengeId, setIsWizardOpen, setActiveTab]);
+
   const handleExportChallenge = useCallback(() => {
     const challengeToExport = allChallenges.find(c => c.id === selectedChallengeToExportId);
     if (!challengeToExport) {
@@ -461,6 +491,7 @@ export function HomePage() {
           <div className="p-4">
             <h1 className="text-3xl font-bold text-center text-[#10B981] mb-2">{selectedDay ? `Jour ${selectedDay.day}` : (nextDayToDo ? `Jour ${nextDayToDo.day}`: 'Défi Terminé')}</h1>
             <p className="text-center text-[#1F2937] mb-6">{currentChallengeName}</p>
+
             {selectedDay ? (
               <>
                 <DayDetails day={selectedDay} />
@@ -574,6 +605,11 @@ export function HomePage() {
             <h1 className="text-3xl font-bold text-center text-[#10B981] mb-6">Gestion des défis</h1>
             <div className="space-y-6">
 
+              {/* New button for wizard */}
+              <button onClick={() => setIsWizardOpen(true)} className="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-600 transition-transform hover:scale-105 mb-6">
+                + Créer un défi avec l'assistant
+              </button>
+
               {/* Duplicate Challenge Card */}
               <div className="bg-white p-4 rounded-lg shadow-md">
                 <h3 className="text-lg font-semibold text-[#1F2937] mb-2">Dupliquer un défi</h3>
@@ -645,8 +681,17 @@ export function HomePage() {
             onWorkoutComplete={handleWorkoutComplete}
             playBeep={playBeep}
             onClose={handleCloseWorkout}
+            maxReps={maxReps}
+            setMaxReps={setMaxReps}
           />
         </div>
+      )}
+
+      {isWizardOpen && (
+        <ChallengeWizard
+          onChallengeCreated={handleChallengeCreated}
+          onClose={() => setIsWizardOpen(false)}
+        />
       )}
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around shadow-top-lg">

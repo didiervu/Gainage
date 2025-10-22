@@ -13,12 +13,14 @@ interface TimerViewProps {
   onWorkoutComplete: (dayNumber: number, maxTime?: number) => void;
   playBeep: () => void;
   onClose: () => void;
+  maxReps?: number;
+  setMaxReps?: (reps: number) => void;
 }
 
 const PREP_TIME = 3;
 
 export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>(
-  ({ selectedDay, restTime, onWorkoutComplete, playBeep, onClose }, ref) => {
+  ({ selectedDay, restTime, onWorkoutComplete, playBeep, onClose, maxReps, setMaxReps }, ref) => {
     const [timeLeft, setTimeLeft] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const [currentSeriesIndex, setCurrentSeriesIndex] = useState(0);
@@ -82,49 +84,43 @@ export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>(
             return; // Timer is stopped, do nothing.
         }
 
-        // Handle "max" phase separately as it's an incrementing stopwatch
-        if (phase === 'max') {
-            const interval = setInterval(() => setMaxTime(m => m + 1), 1000);
-            return () => clearInterval(interval);
-        }
-
-        // --- Countdown Logic ---
-        if (timeLeft <= 0) { // Timer reached zero, transition to the next phase
-            playBeep();
-
-            if (phase === 'prep') {
-                const currentSeries = selectedDay.series![currentSeriesIndex];
-                if (currentSeries.isMax) {
-                    setPhase('max');
-                } else if (currentSeries.time) {
-                    setPhase('work');
-                    setTimeLeft(currentSeries.time);
-                } else {
-                    setPhase('reps_manual');
-                    setIsRunning(false);
-                }
-            } else if (phase === 'work') {
-                moveToNextRep();
-            } else if (phase === 'rest') {
-                setPhase('prep');
-                setTimeLeft(PREP_TIME);
-            }
-            return; // End of transition logic for this render
-        }
-
-        // --- Decrement Logic ---
-        const timeout = setTimeout(() => {
-            // Beep on the last 3 seconds of prep
-            if (phase === 'prep' && timeLeft > 0 && timeLeft <= PREP_TIME) {
+        // Unified timer logic
+        const timer = setInterval(() => {
+            if (phase === 'max') {
+                setMaxTime(m => m + 1);
+            } else if (timeLeft <= 1) {
+                // --- Transition to next phase ---
                 playBeep();
+                if (phase === 'prep') {
+                    const currentSeries = selectedDay.series![currentSeriesIndex];
+                    if (currentSeries.isMax) {
+                        setPhase('max');
+                    } else if (currentSeries.time) {
+                        setPhase('work');
+                        setTimeLeft(currentSeries.time);
+                    } else {
+                        setPhase('reps_manual');
+                        setIsRunning(false);
+                    }
+                } else if (phase === 'work') {
+                    moveToNextRep();
+                } else if (phase === 'rest') {
+                    setPhase('prep');
+                    setTimeLeft(PREP_TIME);
+                }
+            } else {
+                // --- Decrement time ---
+                // Beep on the last 3 seconds of prep
+                if (phase === 'prep' && timeLeft > 1 && timeLeft <= PREP_TIME + 1) {
+                    playBeep();
+                }
+                setTimeLeft(t => t - 1);
             }
-            setTimeLeft(timeLeft - 1);
         }, 1000);
 
-        // Cleanup function
-        return () => clearTimeout(timeout);
+        return () => clearInterval(timer);
 
-    }, [isRunning, phase, timeLeft, selectedDay, currentSeriesIndex, currentRep, moveToNextSeries, playBeep, setMaxTime, restTime]);
+    }, [isRunning, phase, timeLeft, selectedDay, currentSeriesIndex, currentRep, moveToNextRep, playBeep, setMaxTime, restTime]);
 
     const handleStartWorkout = useCallback(() => {
       if (!selectedDay || (selectedDay.type !== 'max' && (!selectedDay.series || selectedDay.series.length === 0))) return;
@@ -247,7 +243,38 @@ export const TimerView = forwardRef<TimerViewHandles, TimerViewProps>(
       <div className="relative text-center p-4 h-full flex flex-col justify-center bg-white">
         <button onClick={onClose} className="absolute top-4 right-4 text-[#6B7280] hover:text-[#10B981] transition-colors"><X size={28} /></button>
         <h2 className="text-2xl font-bold text-[#10B981] mb-4">JOUR {selectedDay.day}</h2>
-        {selectedDay.type === "repos" ? <p className="text-[#1F2937]">Repos aujourd'hui !</p> : <div className="flex-grow flex flex-col justify-center">{renderContent()}</div>}
+        
+        {selectedDay.type === "max" && setMaxReps && maxReps !== undefined ? (
+          <div className="flex-grow flex flex-col justify-center">
+            <p className="text-2xl font-bold text-[#10B981] mb-4">Test de Maximum</p>
+            <p className="text-lg text-[#1F2937] mb-8">Faites autant de pompes que possible. Entrez le nombre ci-dessous.</p>
+            
+            <p className="font-mono my-4 text-[#1F2937] text-8xl">{maxReps}</p>
+
+            <div className="max-w-xs mx-auto w-full px-4">
+                <input 
+                    type="range" 
+                    min="1" 
+                    max="200" 
+                    step="1" 
+                    value={maxReps} 
+                    onChange={(e) => setMaxReps(Number(e.target.value))} 
+                    className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#10B981]"
+                />
+            </div>
+
+            <button 
+                onClick={() => onWorkoutComplete(selectedDay.day)} 
+                className="mt-8 mx-auto bg-[#10B981] text-white font-bold py-3 px-6 rounded-lg shadow-lg"
+            >
+                Enregistrer et Terminer
+            </button>
+          </div>
+        ) : (
+          <>
+            {selectedDay.type === "repos" ? <p className="text-[#1F2937]">Repos aujourd'hui !</p> : <div className="flex-grow flex flex-col justify-center">{renderContent()}</div>}
+          </>
+        )}
       </div>
     );
   }

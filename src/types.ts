@@ -2,7 +2,9 @@ export interface SeriesEntry {
   name: string;
   type: 'exercise' | 'rest' | 'max'; // Nouveau champ
   time?: number; // Durée en secondes
-  repetitions?: number; // Nombre de répétitions
+  reps?: number; // Nombre de répétitions
+  repsPercentage?: number; // Pourcentage du max de répétitions
+  isMax?: boolean; // Indique un exercice de type 'max' (chronomètre)
 }
 
 export interface DayData {
