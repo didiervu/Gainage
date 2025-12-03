@@ -129,7 +129,8 @@ const DayDetails: React.FC<DayDetailsProps> = ({ day }) => {
 
         if (s.time) details.push(`${s.time}s`);
         if (details.length > 0) label = `${label} : ${details.join(', ')}`;
-        return <li key={i} className="text-[#1F2937] bg-white shadow-sm p-2 rounded-md text-sm">{label.trim()}</li>;
+        //return <li key={i} className="text-[#1F2937] bg-white shadow-sm p-2 rounded-md text-sm">{label.trim()}</li>;
+      return <li key={i} className="text-[#1F2940] bg-white shadow-sm p-2 rounded-md text-base md:text-xl">{label.trim()}</li>; 
       })}
     </ul>
   );
